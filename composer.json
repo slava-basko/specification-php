@@ -1,0 +1,24 @@
+{
+  "name": "slava-basko/specification",
+  "description": "Encapsulation your business logic for readable, clear, maintainable purposes.",
+  "authors": [
+    {
+      "name": "Slava Basko",
+      "email": "basko.slava@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4|^5|^7|^8|^9"
+  },
+  "autoload": {
+    "psr-4": { "Basko\\Specification\\": "src" }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Basko\\SpecificationTest\\": "tests"
+    }
+  }
+}
