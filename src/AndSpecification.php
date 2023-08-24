@@ -2,7 +2,6 @@
 
 namespace Basko\Specification;
 
-
 final class AndSpecification extends GroupSpecification
 {
     /**

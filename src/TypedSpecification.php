@@ -3,7 +3,7 @@
 namespace Basko\Specification;
 
 /**
- * Decorator for type assertion of specification's candidate.
+ * Decorator for type assertion of specification's candidate and returned value.
  */
 class TypedSpecification extends AbstractSpecification
 {
@@ -33,20 +33,59 @@ class TypedSpecification extends AbstractSpecification
     }
 
     /**
-     * @param $candidate
+     * @param mixed $candidate
+     * @return void
+     */
+    private function assertCandidateType($candidate)
+    {
+        if (!$candidate instanceof $this->type) {
+            throw new \InvalidArgumentException(sprintf(
+                "%s::isSatisfiedBy() expected '%s', got '%s'",
+                get_class($this->specification),
+                $this->type,
+                is_object($candidate) ? get_class($candidate) : gettype($candidate)
+            ));
+        }
+    }
+
+    /**
+     * @param mixed $result
+     * @return void
+     */
+    private function assertReturnType($result)
+    {
+        if (!is_bool($result)) {
+            throw new \LogicException(sprintf(
+                "%s::isSatisfiedBy() should return 'bool', got '%s'",
+                get_class($this->specification),
+                is_object($result) ? get_class($result) : gettype($result)
+            ));
+        }
+    }
+
+    /**
+     * @param mixed $candidate
      * @return bool
      * @throws \InvalidArgumentException
      */
     public function isSatisfiedBy($candidate)
     {
-        if (!$candidate instanceof $this->type) {
-            throw new \InvalidArgumentException(sprintf(
-                "Expected '%s', got '%s'",
-                $this->type,
-                is_object($candidate) ? get_class($candidate) : gettype($candidate)
-            ));
-        }
+        $this->assertCandidateType($candidate);
+        $result = $this->specification->isSatisfiedBy($candidate);
+        $this->assertReturnType($result);
 
-        return $this->specification->isSatisfiedBy($candidate);
+        return $result;
+    }
+
+    /**
+     * @param $candidate
+     * @return Specification|Specification[]|null
+     * @throws \InvalidArgumentException
+     */
+    public function remainderUnsatisfiedBy($candidate)
+    {
+        $this->assertCandidateType($candidate);
+
+        return $this->specification->remainderUnsatisfiedBy($candidate);
     }
 }

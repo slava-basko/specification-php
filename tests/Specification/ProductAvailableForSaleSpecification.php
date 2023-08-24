@@ -7,8 +7,8 @@ use Basko\Specification\AbstractSpecification;
 
 class ProductAvailableForSaleSpecification extends AbstractSpecification
 {
-    public function isSatisfiedBy($value)
+    public function isSatisfiedBy($candidate)
     {
-        return val($value, 'created') < strtotime('-1 year');
+        return value($candidate, 'created') < strtotime('-1 year');
     }
 }

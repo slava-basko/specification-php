@@ -7,8 +7,8 @@ use Basko\Specification\AbstractSpecification;
 
 class CheepProductSpecification extends AbstractSpecification
 {
-    public function isSatisfiedBy($value)
+    public function isSatisfiedBy($candidate)
     {
-        return intval(val($value, 'price')) < 100;
+        return intval(value($candidate, 'price')) < 100;
     }
 }

@@ -12,7 +12,7 @@ interface Specification
 
     /**
      * @param mixed $candidate
-     * @return bool
+     * @return Specification|Specification[]|null
      */
-    public function __invoke($candidate);
+    public function remainderUnsatisfiedBy($candidate);
 }

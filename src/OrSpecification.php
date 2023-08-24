@@ -2,7 +2,6 @@
 
 namespace Basko\Specification;
 
-
 final class OrSpecification extends GroupSpecification
 {
     /**

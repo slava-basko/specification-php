@@ -13,6 +13,10 @@ abstract class AbstractSpecification implements Specification
         return $this->isSatisfiedBy($candidate);
     }
 
+    /**
+     * @param $candidate
+     * @return $this|null
+     */
     public function remainderUnsatisfiedBy($candidate)
     {
         if (!$this->isSatisfiedBy($candidate))

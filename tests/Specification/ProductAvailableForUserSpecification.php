@@ -13,8 +13,8 @@ class ProductAvailableForUserSpecification extends AbstractSpecification
         $this->userCountry = $userCountry;
     }
 
-    public function isSatisfiedBy($value)
+    public function isSatisfiedBy($candidate)
     {
-        return in_array($this->userCountry, val($value, 'countries'));
+        return in_array($this->userCountry, value($candidate, 'countries'));
     }
 }

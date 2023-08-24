@@ -7,7 +7,7 @@ use Basko\SpecificationTest\Specification\ProductInStockSpecification;
 
 class InvokableSpecificationTest extends BaseTest
 {
-    public function test_specification()
+    public function testInvokableSpecification()
     {
         $productAvailableSpecification = new ProductInStockSpecification();
 

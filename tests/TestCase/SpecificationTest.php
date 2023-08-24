@@ -3,16 +3,15 @@
 namespace Basko\SpecificationTest\TestCase;
 
 
-use Basko\Specification\AndSpecification;
 use Basko\Specification\NotSpecification;
+use Basko\Specification\TypedSpecification;
 use Basko\SpecificationTest\Specification\AdultUserSpecification;
-use Basko\SpecificationTest\Specification\CheepProductSpecification;
 use Basko\SpecificationTest\Specification\ProductAvailableForSaleSpecification;
 use Basko\SpecificationTest\Value\User;
 
 class SpecificationTest extends BaseTest
 {
-    public function test_specification()
+    public function testSpecification()
     {
         $productAvailableForSale = new ProductAvailableForSaleSpecification();
 
@@ -20,30 +19,23 @@ class SpecificationTest extends BaseTest
         $this->assertFalse($productAvailableForSale->isSatisfiedBy(['created' => strtotime('-10 day')]));
     }
 
-    public function test_not_specification()
+    public function testNotSpecification()
     {
         $productNotAvailableForSale = new NotSpecification(new ProductAvailableForSaleSpecification());
 
         $this->assertTrue($productNotAvailableForSale->isSatisfiedBy(['created' => strtotime('-10 day')]));
     }
 
-    public function test_invokable_specification()
-    {
-        $productAvailableForSale = new ProductAvailableForSaleSpecification();
-
-        $this->assertTrue($productAvailableForSale(['created' => strtotime('-2 year')]));
-    }
-
     public function testRemainderUnsatisfiedBy()
     {
-        $youth = new User(14);
+        $teen = new User(14);
         $adult = new User(25);
 
-        $adultUserSpecification = new AdultUserSpecification();
+        $adultUserSpecification = new TypedSpecification(new AdultUserSpecification(), User::class);
 
-        $this->assertFalse($adultUserSpecification->isSatisfiedBy($youth));
+        $this->assertFalse($adultUserSpecification->isSatisfiedBy($teen));
 
-        $unsatisfiedAdultUserSpecification = $adultUserSpecification->remainderUnsatisfiedBy($youth);
+        $unsatisfiedAdultUserSpecification = $adultUserSpecification->remainderUnsatisfiedBy($teen);
         $this->assertInstanceOf(AdultUserSpecification::class, $unsatisfiedAdultUserSpecification);
 
         $this->assertTrue($unsatisfiedAdultUserSpecification->isSatisfiedBy($adult));

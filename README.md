@@ -1,6 +1,6 @@
 # Specification Pattern
 
-Encapsulation your business logic for readable, clear, maintainable purposes.
+Encapsulate your business logic for readable, clear, maintainable purposes.
 
 ## How to run tests
 

@@ -10,7 +10,7 @@ use Basko\SpecificationTest\Specification\ProductInStockSpecification;
 
 class AndSpecificationTest extends BaseTest
 {
-    public function test_and_specification()
+    public function testAndSpecification()
     {
         $productAvailableAndSoldableForUser = new AndSpecification([
             new ProductInStockSpecification(),
@@ -32,7 +32,7 @@ class AndSpecificationTest extends BaseTest
         ]));
     }
 
-    public function test_not_and_specification()
+    public function testNotAndSpecification()
     {
         $productNotAvailableAndSoldableForUser = new NotSpecification(new AndSpecification([
             new ProductInStockSpecification(),

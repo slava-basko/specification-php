@@ -11,7 +11,7 @@ use Basko\SpecificationTest\Specification\ProductInStockSpecification;
 
 class GroupSpecificationTest extends BaseTest
 {
-    public function test_group_specification_invalid_values()
+    public function testGroupSpecificationInvalidValues()
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,
@@ -24,7 +24,7 @@ class GroupSpecificationTest extends BaseTest
         ]);
     }
 
-    public function test_group_specification_invalid_values_2()
+    public function testGroupSpecificationInvalidValues2()
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,

@@ -2,7 +2,6 @@
 
 namespace Basko\Specification;
 
-
 abstract class GroupSpecification extends AbstractSpecification
 {
     /**

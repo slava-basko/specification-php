@@ -9,7 +9,7 @@ use Basko\SpecificationTest\Specification\ProductAvailableForSaleSpecification;
 
 class OrSpecificationTest extends BaseTest
 {
-    public function test_or_specification()
+    public function testOrSpecification()
     {
         $leftoverProductSpecification = new OrSpecification([
             new CheepProductSpecification(),
