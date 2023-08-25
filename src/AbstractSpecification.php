@@ -14,7 +14,9 @@ abstract class AbstractSpecification implements Specification
     }
 
     /**
-     * @param $candidate
+     * Returns remainder (unsatisfied) specifications.
+     *
+     * @param mixed $candidate
      * @return $this|null
      */
     public function remainderUnsatisfiedBy($candidate)
