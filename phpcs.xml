@@ -2,5 +2,7 @@
 <ruleset>
     <exclude-pattern>tests/*</exclude-pattern>
 
-    <rule ref="PSR12"/>
+    <rule ref="PSR12">
+        <exclude name="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+    </rule>
 </ruleset>
