@@ -49,21 +49,6 @@ class TypedSpecification extends AbstractSpecification
     }
 
     /**
-     * @param mixed $result
-     * @return void
-     */
-    private function assertReturnType($result)
-    {
-        if (!is_bool($result)) {
-            throw new \LogicException(sprintf(
-                "%s::isSatisfiedBy() should return 'bool', got '%s'",
-                get_class($this->specification),
-                is_object($result) ? get_class($result) : gettype($result)
-            ));
-        }
-    }
-
-    /**
      * @param mixed $candidate
      * @return bool
      * @throws \InvalidArgumentException
@@ -72,7 +57,7 @@ class TypedSpecification extends AbstractSpecification
     {
         $this->assertCandidateType($candidate);
         $result = $this->specification->isSatisfiedBy($candidate);
-        $this->assertReturnType($result);
+        $this->assertReturnType($result, $this->specification);
 
         return $result;
     }

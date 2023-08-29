@@ -11,7 +11,9 @@ final class OrSpecification extends GroupSpecification
     public function isSatisfiedBy($candidate)
     {
         foreach ($this->specifications as $specification) {
-            if ($specification->isSatisfiedBy($candidate)) {
+            $result = $specification->isSatisfiedBy($candidate);
+            $this->assertReturnType($result, $specification);
+            if ($result) {
                 return true;
             }
         }
