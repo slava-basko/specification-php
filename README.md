@@ -5,6 +5,12 @@ Encapsulate your business logic for readable, clear, and maintainable purposes.
 Read it if you are not familiar with Specification pattern [http://www.martinfowler.com/apsupp/spec.pdf].
 
 
+## Install
+```bash
+composer require slava-basko/specification-php
+```
+
+
 ## Usage
 Let's imagine that we have the specification of an Adult Person.
 ```php
@@ -48,6 +54,7 @@ public function isSatisfiedBy(Parcel $parcel);
 ```
 Or you can use `TypedSpecification` decorator to achieve the same goal.
 
+
 #### Autocompletion
 Use the doc-block type hinting in your end specifications for autocompletion, like `@param User $candidate`.
 Here is an example.
@@ -90,6 +97,7 @@ $remainderUnsatisfiedSpecification = $adultPersonSpecification->remainderUnsatis
 //
 // because only AdultSpecification was satisfied; assume we know age, and we don't know alien sex.
 ```
+
 
 ## License
 Use as you want. No liability or warranty from me. Can be considered as MIT.
