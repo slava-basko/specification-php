@@ -45,7 +45,7 @@ $adultUserTypesSpecification->isSatisfiedBy('blah'); // InvalidArgumentException
 #### `TypedSpecification` VS `public function isSatisfiedBy(User $candidate)`
 Of course, you can create your own specification interfaces with type hinting in `isSatisfiedBy`, 
 but sooner or later you will see a lot of interfaces that are similar by 99%.
-```
+```php
 interface UserSpecification
 {
     public function isSatisfiedBy(User $user);
