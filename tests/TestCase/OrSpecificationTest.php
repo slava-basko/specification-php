@@ -4,29 +4,29 @@ namespace Basko\SpecificationTest\TestCase;
 
 
 use Basko\Specification\OrSpecification;
-use Basko\SpecificationTest\Specification\CheepProductSpecification;
-use Basko\SpecificationTest\Specification\ProductAvailableForSaleSpecification;
+use Basko\SpecificationTest\Specification\ClubsSpecification;
+use Basko\SpecificationTest\Specification\SpadesSpecification;
+use Basko\SpecificationTest\Value\PlayingCard;
 
 class OrSpecificationTest extends BaseTest
 {
     public function testOrSpecification()
     {
-        $leftoverProductSpecification = new OrSpecification([
-            new CheepProductSpecification(),
-            new ProductAvailableForSaleSpecification(),
+        $spec = new OrSpecification([
+            new SpadesSpecification(),
+            new ClubsSpecification(),
         ]);
 
-        $this->assertTrue($leftoverProductSpecification->isSatisfiedBy([
-            'price' => 10,
-            'created' => strtotime('-1 day')
-        ]));
-        $this->assertTrue($leftoverProductSpecification->isSatisfiedBy([
-            'price' => 1000,
-            'created' => strtotime('-2 year')
-        ]));
-        $this->assertFalse($leftoverProductSpecification->isSatisfiedBy([
-            'price' => 1000,
-            'created' => strtotime('-1 day')
-        ]));
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_KING))
+        );
+
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_CLUBS, PlayingCard::RANK_KING))
+        );
+
+        $this->assertFalse(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_KING))
+        );
     }
 }

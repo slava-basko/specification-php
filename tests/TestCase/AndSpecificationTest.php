@@ -5,43 +5,30 @@ namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\AndSpecification;
 use Basko\Specification\NotSpecification;
-use Basko\SpecificationTest\Specification\ProductAvailableForUserSpecification;
-use Basko\SpecificationTest\Specification\ProductInStockSpecification;
+use Basko\SpecificationTest\Specification\KingSpecification;
+use Basko\SpecificationTest\Specification\SpadesSpecification;
+use Basko\SpecificationTest\Value\PlayingCard;
 
 class AndSpecificationTest extends BaseTest
 {
     public function testAndSpecification()
     {
-        $productAvailableAndSoldableForUser = new AndSpecification([
-            new ProductInStockSpecification(),
-            new ProductAvailableForUserSpecification('CA'),
+        $spec = new AndSpecification([
+            new SpadesSpecification(),
+            new KingSpecification(),
         ]);
 
-        $this->assertTrue($productAvailableAndSoldableForUser->isSatisfiedBy([
-            'store_qty' => 5,
-            'countries' => ['CA', 'US', 'MX']
-        ]));
-        $this->assertTrue($productAvailableAndSoldableForUser->isSatisfiedBy([
-            'warehouse_qty' => 5,
-            'countries' => ['CA', 'US', 'MX']
-        ]));
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_KING))
+        );
 
-        $this->assertFalse($productAvailableAndSoldableForUser->isSatisfiedBy([
-            'warehouse_qty' => 5,
-            'countries' => ['UA', 'PL']
-        ]));
-    }
+        $this->assertFalse(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_QUEEN))
+        );
 
-    public function testNotAndSpecification()
-    {
-        $productNotAvailableAndSoldableForUser = new NotSpecification(new AndSpecification([
-            new ProductInStockSpecification(),
-            new ProductAvailableForUserSpecification('CA'),
-        ]));
-
-        $this->assertTrue($productNotAvailableAndSoldableForUser->isSatisfiedBy([
-            'store_qty' => 0,
-            'countries' => ['CA', 'US', 'MX']
-        ]));
+        $notSpec = new NotSpecification($spec);
+        $this->assertTrue(
+            $notSpec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_QUEEN))
+        );
     }
 }

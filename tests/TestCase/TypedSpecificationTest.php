@@ -3,9 +3,9 @@
 namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\TypedSpecification;
-use Basko\SpecificationTest\Specification\AdultUserSpecification;
+use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
 use Basko\SpecificationTest\Specification\InvalidSpecification;
-use Basko\SpecificationTest\Value\User;
+use Basko\SpecificationTest\Value\PlayingCard;
 
 class TypedSpecificationTest extends BaseTest
 {
@@ -16,26 +16,27 @@ class TypedSpecificationTest extends BaseTest
             "Type '1' not exist"
         );
 
-        new TypedSpecification(new AdultUserSpecification(), 1);
+        new TypedSpecification(new DiamondsAceSpecification(), 1);
     }
 
     public function testTypedSpecificationException()
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,
-            "Basko\SpecificationTest\Specification\AdultUserSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\User', got 'integer'"
+            "Basko\SpecificationTest\Specification\DiamondsAceSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
         );
 
-        $specification = new TypedSpecification(new AdultUserSpecification(), User::class);
-        $specification->isSatisfiedBy(1);
+        $spec = new TypedSpecification(new DiamondsAceSpecification(), PlayingCard::class);
+        $spec->isSatisfiedBy(1);
     }
 
     public function testTypedSpecification()
     {
-        $specification = new TypedSpecification(new AdultUserSpecification(), User::class);
+        $spec = new TypedSpecification(new DiamondsAceSpecification(), PlayingCard::class);
 
-        $this->assertTrue($specification->isSatisfiedBy(new User(20)));
-        $this->assertFalse($specification->isSatisfiedBy(new User(16)));
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE))
+        );
     }
 
     public function testTypedSpecificationReturnType()
@@ -45,19 +46,7 @@ class TypedSpecificationTest extends BaseTest
             "Basko\SpecificationTest\Specification\InvalidSpecification::isSatisfiedBy() should return 'bool', got 'integer'"
         );
 
-        $specification = new TypedSpecification(new InvalidSpecification(), User::class);
-        $specification->isSatisfiedBy(new User(20));
-    }
-
-    public function testRemainderUnsatisfiedByTypesSpecificationFailed()
-    {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            "Basko\SpecificationTest\Specification\AdultUserSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\User', got 'integer'"
-        );
-
-        $adultUserSpecification = new TypedSpecification(new AdultUserSpecification(), User::class);
-
-        $adultUserSpecification->isSatisfiedBy(1);
+        $spec = new TypedSpecification(new InvalidSpecification(), PlayingCard::class);
+        $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE));
     }
 }

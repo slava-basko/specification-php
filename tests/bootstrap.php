@@ -9,7 +9,3 @@
 // docker run -v `pwd`:/var/www --rm php:8.2-cli var/www/vendor/bin/phpunit /var/www/ -c /var/www/phpunit.xml.dist
 
 require_once __DIR__ . '/../vendor/autoload.php'; // composer autoload
-
-function value(array $array, $key, $defaultValue = null) {
-    return array_key_exists($key, $array) ? $array[$key] : $defaultValue;
-}

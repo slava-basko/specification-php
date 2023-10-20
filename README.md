@@ -1,6 +1,6 @@
 # Specification Pattern
 
-Encapsulate your business logic for readable, clear, and maintainable purposes.
+Encapsulate your business decisions for readable, clear, and maintainable purposes.
 
 Read it if you are not familiar with Specification pattern [http://www.martinfowler.com/apsupp/spec.pdf].
 
@@ -44,12 +44,27 @@ $adultUserTypesSpecification->isSatisfiedBy('blah'); // InvalidArgumentException
 
 #### `TypedSpecification` VS `public function isSatisfiedBy(User $candidate)`
 Of course, you can create your own specification interfaces with type hinting in `isSatisfiedBy`, 
-but sooner or later you will see a lot of specifications that are similar by 99%.
+but sooner or later you will see a lot of interfaces that are similar by 99%.
 ```
-public function isSatisfiedBy(User $user);
-public function isSatisfiedBy(Product $product);
-public function isSatisfiedBy(Cart $cart);
-public function isSatisfiedBy(Parcel $parcel);
+interface UserSpecification
+{
+    public function isSatisfiedBy(User $user);
+}
+
+interface ProductSpecification
+{
+    public function isSatisfiedBy(Product $product);
+}
+
+interface CartSpecification
+{
+    public function isSatisfiedBy(Cart $cart);
+}
+
+interface ParcelSpecification
+{
+    public function isSatisfiedBy(Parcel $parcel);
+}
 // etc.
 ```
 Or you can use `TypedSpecification` decorator to achieve the same goal.
@@ -68,11 +83,13 @@ public function isSatisfiedBy($candidate)
     return $candidate->someMethodThatWillBeAutocompletedInYourIDE();
 }
 ```
+`TypedSpecification` guaranty that `$candidate` will be an instance of `User` class, 
+and doc-block `@param User $candidate` helps your IDE to autocomplete `$candidate` methods.
 
 
 #### Other
-This lib provided couple of useful prebuilt specifications like `AndSpecification` and `OrSpecification` 
-that heals you to group up your specifications and create a new one.
+This lib provides couple of useful prebuilt specifications like `AndSpecification` and `OrSpecification` 
+that helps you to group up your specifications and create a new one.
 ```php
 $adultPersonSpecification = new AndSpecification([
     new AdultSpecification(),

@@ -4,51 +4,43 @@ namespace Basko\SpecificationTest\TestCase;
 
 
 use Basko\Specification\NotSpecification;
-use Basko\Specification\TypedSpecification;
-use Basko\SpecificationTest\Specification\AdultUserSpecification;
-use Basko\SpecificationTest\Specification\ProductAvailableForSaleSpecification;
-use Basko\SpecificationTest\Value\User;
+use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
+use Basko\SpecificationTest\Value\PlayingCard;
 
 class SpecificationTest extends BaseTest
 {
     public function testSpecification()
     {
-        $productAvailableForSale = new ProductAvailableForSaleSpecification();
+        $spec = new DiamondsAceSpecification();
 
-        $this->assertTrue($productAvailableForSale->isSatisfiedBy(['created' => strtotime('-2 year')]));
-        $this->assertFalse($productAvailableForSale->isSatisfiedBy(['created' => strtotime('-10 day')]));
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE))
+        );
+
+        $this->assertNull(
+            $spec->remainderUnsatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE))
+        );
+
+        $this->assertFalse(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_ACE))
+        );
+
+        $this->assertEquals(
+            new DiamondsAceSpecification(),
+            $spec->remainderUnsatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_ACE))
+        );
     }
 
     public function testNotSpecification()
     {
-        $productNotAvailableForSale = new NotSpecification(new ProductAvailableForSaleSpecification());
+        $spec = new NotSpecification(new DiamondsAceSpecification());
 
-        $this->assertTrue($productNotAvailableForSale->isSatisfiedBy(['created' => strtotime('-10 day')]));
-    }
+        $this->assertTrue(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK_ACE))
+        );
 
-    public function testRemainderUnsatisfiedBy()
-    {
-        $teen = new User(14);
-        $adult = new User(25);
-
-        $adultUserSpecification = new TypedSpecification(new AdultUserSpecification(), User::class);
-
-        $this->assertFalse($adultUserSpecification->isSatisfiedBy($teen));
-
-        $unsatisfiedAdultUserSpecification = $adultUserSpecification->remainderUnsatisfiedBy($teen);
-        $this->assertInstanceOf(AdultUserSpecification::class, $unsatisfiedAdultUserSpecification);
-
-        $this->assertTrue($unsatisfiedAdultUserSpecification->isSatisfiedBy($adult));
-    }
-
-    public function testRemainderUnsatisfiedByFailed()
-    {
-        $adult = new User(25);
-
-        $adultUserSpecification = new AdultUserSpecification();
-
-        $this->assertTrue($adultUserSpecification->isSatisfiedBy($adult));
-
-        $this->assertNull($adultUserSpecification->remainderUnsatisfiedBy($adult));
+        $this->assertFalse(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE))
+        );
     }
 }
