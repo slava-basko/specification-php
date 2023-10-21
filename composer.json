@@ -1,7 +1,7 @@
 {
   "name": "slava-basko/specification-php",
   "type": "library",
-  "description": "Encapsulate your business logic for readable, clear, maintainable purposes.",
+  "description": "Encapsulate your business decisions for readable, clear, maintainable purposes.",
   "keywords": ["specification", "pattern"],
   "authors": [
     {
