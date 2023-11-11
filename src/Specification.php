@@ -12,7 +12,7 @@ interface Specification
 
     /**
      * @param mixed $candidate
-     * @return Specification|Specification[]|null
+     * @return Specification|null
      */
     public function remainderUnsatisfiedBy($candidate);
 }

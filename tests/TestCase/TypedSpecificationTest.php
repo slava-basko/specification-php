@@ -3,6 +3,7 @@
 namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\TypedSpecification;
+use Basko\SpecificationTest\Specification\DiamondsAceArraySpecification;
 use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
 use Basko\SpecificationTest\Specification\InvalidSpecification;
 use Basko\SpecificationTest\Value\PlayingCard;
@@ -13,7 +14,7 @@ class TypedSpecificationTest extends BaseTest
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,
-            "Type '1' not exist"
+            "Type must be a class-string or callable, got 'integer'"
         );
 
         new TypedSpecification(new DiamondsAceSpecification(), 1);
@@ -23,7 +24,7 @@ class TypedSpecificationTest extends BaseTest
     {
         $this->setExpectedException(
             \InvalidArgumentException::class,
-            "Basko\SpecificationTest\Specification\DiamondsAceSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
+            "DiamondsAceSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
         );
 
         $spec = new TypedSpecification(new DiamondsAceSpecification(), PlayingCard::class);
@@ -37,16 +38,41 @@ class TypedSpecificationTest extends BaseTest
         $this->assertTrue(
             $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE))
         );
+
+        $this->assertFalse(
+            $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_KING))
+        );
     }
 
     public function testTypedSpecificationReturnType()
     {
         $this->setExpectedException(
             \LogicException::class,
-            "Basko\SpecificationTest\Specification\InvalidSpecification::isSatisfiedBy() should return 'bool', got 'integer'"
+            "InvalidSpecification::isSatisfiedBy() should return 'bool', got 'integer'"
         );
 
         $spec = new TypedSpecification(new InvalidSpecification(), PlayingCard::class);
         $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_ACE));
+    }
+
+    public function testTypedSpecificationWithCallable()
+    {
+        $spec = new TypedSpecification(new DiamondsAceArraySpecification(), function ($candidate) {
+            if (!array_key_exists('suit', $candidate) || !array_key_exists('rank', $candidate)) {
+                return false;
+            }
+
+            return true;
+        });
+
+        $this->assertTrue(
+            $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS, 'rank' => PlayingCard::RANK_ACE])
+        );
+
+        $this->setExpectedException(
+            \LogicException::class,
+            "TypedSpecification<Basko\SpecificationTest\Specification\DiamondsAceArraySpecification>::isSatisfiedBy() type check failed (callback returned falsy result)"
+        );
+        $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS]);
     }
 }

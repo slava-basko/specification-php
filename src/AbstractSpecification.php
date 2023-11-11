@@ -11,11 +11,11 @@ abstract class AbstractSpecification implements Specification
      */
     protected function assertReturnType($result, Specification $specification = null)
     {
-        if (!is_bool($result)) {
-            throw new \LogicException(sprintf(
+        if (!\is_bool($result)) {
+            throw new \LogicException(\sprintf(
                 "%s::isSatisfiedBy() should return 'bool', got '%s'",
-                ($specification instanceof Specification) ? get_class($specification) : get_class($this),
-                is_object($result) ? get_class($result) : gettype($result)
+                ($specification instanceof Specification) ? get_class($specification) : \get_class($this),
+                \is_object($result) ? \get_class($result) : \gettype($result)
             ));
         }
     }
@@ -26,14 +26,17 @@ abstract class AbstractSpecification implements Specification
      */
     public function __invoke($candidate)
     {
-        return $this->isSatisfiedBy($candidate);
+        $result = $this->isSatisfiedBy($candidate);
+        $this->assertReturnType($result);
+
+        return $result;
     }
 
     /**
      * Returns remainder (unsatisfied) specifications.
      *
      * @param mixed $candidate
-     * @return $this|null
+     * @return \Basko\Specification\Specification|null
      */
     public function remainderUnsatisfiedBy($candidate)
     {

@@ -2,9 +2,6 @@
 
 namespace Basko\Specification;
 
-use InvalidArgumentException;
-use Traversable;
-
 abstract class GroupSpecification extends AbstractSpecification
 {
     /**
@@ -26,14 +23,14 @@ abstract class GroupSpecification extends AbstractSpecification
      */
     public function __construct($specifications)
     {
-        $specifications = $this->flatten(func_get_args());
+        $specifications = $this->flatten(\func_get_args());
 
         foreach ($specifications as $specification) {
             if (!$specification instanceof Specification) {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     "Expected '%s', got '%s'",
                     Specification::class,
-                    is_object($specification) ? get_class($specification) : gettype($specification)
+                    \is_object($specification) ? \get_class($specification) : \gettype($specification)
                 ));
             }
         }
@@ -49,8 +46,8 @@ abstract class GroupSpecification extends AbstractSpecification
     {
         $result = [];
         foreach ($list as $value) {
-            if (is_array($value) || $value instanceof Traversable) {
-                $result = array_merge($result, $this->flatten($value));
+            if (\is_array($value) || $value instanceof \Traversable) {
+                $result = \array_merge($result, $this->flatten($value));
             } else {
                 $result[] = $value;
             }
@@ -61,7 +58,7 @@ abstract class GroupSpecification extends AbstractSpecification
 
     /**
      * @param mixed $candidate
-     * @return \Basko\Specification\GroupSpecification|null
+     * @return \Basko\Specification\Specification|null
      */
     public function remainderUnsatisfiedBy($candidate)
     {
