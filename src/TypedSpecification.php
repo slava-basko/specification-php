@@ -49,7 +49,8 @@ class TypedSpecification extends AbstractSpecification
             try {
                 if (!\call_user_func($this->type, $candidate)) {
                     throw new \InvalidArgumentException(\sprintf(
-                        "TypedSpecification<%s>::isSatisfiedBy() type check failed (callback returned falsy result), candidate '%s'",
+                        "%s<%s>::isSatisfiedBy() type check failed (callback returned falsy result), candidate '%s'",
+                        \get_class($this),
                         \get_class($this->specification),
                         \is_object($candidate) ? \get_class($candidate) : \var_export($candidate, true)
                     ));
@@ -59,7 +60,8 @@ class TypedSpecification extends AbstractSpecification
             } catch (\Exception $exception) {
                 throw new \InvalidArgumentException(
                     \sprintf(
-                        "TypedSpecification<%s>::isSatisfiedBy() type check failed (%s), candidate '%s'",
+                        "%s<%s>::isSatisfiedBy() type check failed (%s), candidate '%s'",
+                        \get_class($this),
                         \get_class($this->specification),
                         $exception->getMessage(),
                         \is_object($candidate) ? \get_class($candidate) : \var_export($candidate, true)
