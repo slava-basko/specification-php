@@ -6,6 +6,7 @@ use Basko\Specification\AndSpecification;
 use Basko\Specification\NotSpecification;
 use Basko\Specification\OrSpecification;
 use Basko\Specification\TypedSpecification;
+use Basko\Specification\Utils;
 use Basko\SpecificationTest\Specification\HeartsSpecification;
 use Basko\SpecificationTest\Specification\SpadesSpecification;
 use Basko\SpecificationTest\Specification\PlayingCardSpecification;
@@ -30,15 +31,15 @@ class ComposabilityTest extends BaseTest
                 new SpadesSpecification(),
                 new NotSpecification(new OrSpecification([
                     new PlayingCardSpecification(PlayingCard::SUIT_SPADES, PlayingCard::RANK_2),
-                    new PlayingCardSpecification(PlayingCard::SUIT_SPADES, PlayingCard::RANK_3)
-                ]))
+                    new PlayingCardSpecification(PlayingCard::SUIT_SPADES, PlayingCard::RANK_3),
+                ])),
             ]),
             new AndSpecification([
                 new HeartsSpecification(),
                 new NotSpecification(new OrSpecification([
                     new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_2),
-                    new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_3)
-                ]))
+                    new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_3),
+                ])),
             ]),
         ]);
     }
@@ -79,5 +80,25 @@ class ComposabilityTest extends BaseTest
             "Basko\Specification\OrSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
         );
         $spec->isSatisfiedBy(1);
+    }
+
+    public function testSpecName()
+    {
+        $this->assertEquals([
+            'or' => [
+                [
+                    'and' => [
+                        'spades',
+                        ['not' => ['or' => ['♠_2', '♠_3']]],
+                    ],
+                ],
+                [
+                    'and' => [
+                        'hearts',
+                        ['not' => ['or' => ['♥_2', '♥_3']]],
+                    ],
+                ],
+            ],
+        ], Utils::toSnakeCase($this->spec));
     }
 }

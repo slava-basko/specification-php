@@ -2,7 +2,10 @@
   "name": "slava-basko/specification-php",
   "type": "library",
   "description": "Encapsulate your business decisions for readable, clear, maintainable purposes.",
-  "keywords": ["specification", "pattern"],
+  "keywords": [
+    "specification",
+    "pattern"
+  ],
   "authors": [
     {
       "name": "Slava Basko",
@@ -18,7 +21,9 @@
     "squizlabs/php_codesniffer": ">=3"
   },
   "autoload": {
-    "psr-4": { "Basko\\Specification\\": "src" }
+    "psr-4": {
+      "Basko\\Specification\\": "src"
+    }
   },
   "autoload-dev": {
     "psr-4": {

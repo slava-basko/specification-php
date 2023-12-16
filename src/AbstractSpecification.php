@@ -5,6 +5,11 @@ namespace Basko\Specification;
 abstract class AbstractSpecification implements Specification
 {
     /**
+     * @var \Basko\Specification\Specification|\Basko\Specification\Specification[]|null
+     */
+    protected $container = null;
+
+    /**
      * @param mixed $result
      * @param \Basko\Specification\Specification|null $specification
      * @return void
@@ -40,8 +45,9 @@ abstract class AbstractSpecification implements Specification
      */
     public function remainderUnsatisfiedBy($candidate)
     {
-        if (!$this->isSatisfiedBy($candidate))
+        if (!$this->isSatisfiedBy($candidate)) {
             return $this;
+        }
 
         return null;
     }

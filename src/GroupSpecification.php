@@ -5,11 +5,6 @@ namespace Basko\Specification;
 abstract class GroupSpecification extends AbstractSpecification
 {
     /**
-     * @var Specification[]
-     */
-    protected $specifications = [];
-
-    /**
      * Constructor for GroupSpecification.
      *
      * ```php
@@ -23,7 +18,7 @@ abstract class GroupSpecification extends AbstractSpecification
      */
     public function __construct($specifications)
     {
-        $specifications = $this->flatten(\func_get_args());
+        $specifications = Utils::flatten(\func_get_args());
 
         foreach ($specifications as $specification) {
             if (!$specification instanceof Specification) {
@@ -35,36 +30,18 @@ abstract class GroupSpecification extends AbstractSpecification
             }
         }
 
-        $this->specifications = $specifications;
-    }
-
-    /**
-     * @param array|\Traversable $list
-     * @return array
-     */
-    private function flatten($list)
-    {
-        $result = [];
-        foreach ($list as $value) {
-            if (\is_array($value) || $value instanceof \Traversable) {
-                $result = \array_merge($result, $this->flatten($value));
-            } else {
-                $result[] = $value;
-            }
-        }
-
-        return $result;
+        $this->container = $specifications;
     }
 
     /**
      * @param mixed $candidate
-     * @return \Basko\Specification\Specification|null
+     * @return \Basko\Specification\GroupSpecification|null
      */
     public function remainderUnsatisfiedBy($candidate)
     {
-        if ($this->isSatisfiedBy($candidate))
+        if ($this->isSatisfiedBy($candidate)) {
             return null;
-        else {
+        } else {
             // Constructs a GroupSpecification out of the specifications that have not been satisfied
             return new static($this->remaindersUnsatisfiedBy($candidate));
         }
@@ -79,9 +56,10 @@ abstract class GroupSpecification extends AbstractSpecification
     private function remaindersUnsatisfiedBy($candidate)
     {
         $unsatisfied = [];
-        foreach ($this->specifications as $specification) {
-            if (!$specification->isSatisfiedBy($candidate))
+        foreach ($this->container as $specification) {
+            if (!$specification->isSatisfiedBy($candidate)) {
                 $unsatisfied[] = $specification;
+            }
         }
 
         return $unsatisfied;

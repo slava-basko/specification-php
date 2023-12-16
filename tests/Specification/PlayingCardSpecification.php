@@ -33,4 +33,9 @@ class PlayingCardSpecification extends AbstractSpecification
     {
         return $candidate->rank == $this->rank && $candidate->suit == $this->suit;
     }
+
+    public function __toString()
+    {
+        return $this->suit . '_' . $this->rank;
+    }
 }

@@ -10,7 +10,7 @@ final class AndSpecification extends GroupSpecification
      */
     public function isSatisfiedBy($candidate)
     {
-        foreach ($this->specifications as $specification) {
+        foreach ($this->container as $specification) {
             $result = $specification->isSatisfiedBy($candidate);
             $this->assertReturnType($result, $specification);
             if (!$result) {
