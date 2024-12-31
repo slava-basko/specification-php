@@ -19,7 +19,7 @@ abstract class AbstractSpecification implements Specification
         if (!\is_bool($result)) {
             throw new \LogicException(\sprintf(
                 "%s::isSatisfiedBy() should return 'bool', got '%s'",
-                ($specification instanceof Specification) ? get_class($specification) : \get_class($this),
+                ($specification instanceof Specification) ? \get_class($specification) : \get_class($this),
                 \is_object($result) ? \get_class($result) : \gettype($result)
             ));
         }

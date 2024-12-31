@@ -78,6 +78,6 @@ final class Utils extends AbstractSpecification
             $match = $match == \strtoupper($match) ? \strtolower($match) : \lcfirst($match);
         }
 
-        return implode('_', $result);
+        return \implode('_', $result);
     }
 }
