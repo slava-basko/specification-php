@@ -8,6 +8,15 @@ use RuntimeException;
 
 abstract class BaseTest extends TestCase
 {
+    protected function mock($class)
+    {
+        if (method_exists($this, 'getMock')) {
+            return $this->getMock($class);
+        }
+
+        return $this->createMock($class);
+    }
+
     /**
      * @param $exceptionClass
      * @param $exceptionMessage

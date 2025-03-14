@@ -20,6 +20,16 @@ class TypedSpecificationTest extends BaseTest
         new TypedSpecification(new DiamondsAceSpecification(), 1);
     }
 
+    public function testTypedSpecificationConstructExceptionTypeNotExist()
+    {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            "Type 'SomeClass' not exist"
+        );
+
+        new TypedSpecification(new DiamondsAceSpecification(), 'SomeClass');
+    }
+
     public function testTypedSpecificationException()
     {
         $this->setExpectedException(
@@ -74,5 +84,31 @@ class TypedSpecificationTest extends BaseTest
             "TypedSpecification<Basko\SpecificationTest\Specification\DiamondsAceArraySpecification>::isSatisfiedBy() type check failed (callback returned falsy result)"
         );
         $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS]);
+    }
+
+    public function testTypedSpecificationWithCallableAndException()
+    {
+        $spec = new TypedSpecification(new DiamondsAceArraySpecification(), function ($candidate) {
+            throw new \Exception('error inside');
+        });
+
+        $this->setExpectedException(
+            \LogicException::class,
+            "TypedSpecification<Basko\SpecificationTest\Specification\DiamondsAceArraySpecification>::isSatisfiedBy() type check failed (error inside)"
+        );
+        $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS]);
+    }
+
+    public function testTypedSpecificationRemainder()
+    {
+        $card = new PlayingCard(PlayingCard::SUIT_DIAMONDS, PlayingCard::RANK_KING);
+
+        $spec = new TypedSpecification(new DiamondsAceSpecification(), PlayingCard::class);
+        $spec->isSatisfiedBy($card);
+
+        $this->assertEquals(
+            new DiamondsAceSpecification(),
+            $spec->remainderUnsatisfiedBy($card)
+        );
     }
 }

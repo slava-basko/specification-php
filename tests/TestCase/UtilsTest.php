@@ -4,18 +4,29 @@ namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\AndSpecification;
 use Basko\Specification\OrSpecification;
+use Basko\Specification\TypedSpecification;
 use Basko\Specification\Utils;
 use Basko\SpecificationTest\Specification\ClubsSpecification;
 use Basko\SpecificationTest\Specification\SnakeCase\PDFLoadableSpecification;
 use Basko\SpecificationTest\Specification\SnakeCase\Some4Numbers234Specification;
 use Basko\SpecificationTest\Specification\SnakeCase\SomeHTMLSpecification;
 use Basko\SpecificationTest\Specification\SnakeCase\startMIDDLELastSpecification;
+use Basko\SpecificationTest\Value\PlayingCard;
 
-class NamesTest extends BaseTest
+class UtilsTest extends BaseTest
 {
+    public function testUtilsFlatten()
+    {
+        $this->assertEquals(
+            [1, 2, 3, 4],
+            Utils::flatten([1, 2, [3], [[4]]])
+        );
+    }
+
     public function specifications()
     {
         yield [new ClubsSpecification(), 'clubs'];
+        yield [new TypedSpecification(new ClubsSpecification(), PlayingCard::class), 'clubs'];
         yield [new SomeHTMLSpecification(), 'some_html'];
         yield [new PDFLoadableSpecification(), 'pdf_loadable'];
         yield [new startMIDDLELastSpecification(), 'start_middle_last'];
