@@ -15,16 +15,16 @@ final class TypedSpecification extends AbstractSpecification
     /**
      * @param \Basko\Specification\Specification $specification
      * @param class-string|callable $type
-     * @throws \InvalidArgumentException
+     * @throws \Basko\Specification\Exception
      */
     public function __construct(Specification $specification, $type)
     {
         $this->container = $specification;
 
         if (\is_string($type) && !\class_exists($type)) {
-            throw new \InvalidArgumentException(\sprintf("Type '%s' not exist", $type));
+            throw new Exception(\sprintf("Type '%s' not exist", $type));
         } elseif (!\is_string($type) && !\is_callable($type)) {
-            throw new \InvalidArgumentException(\sprintf(
+            throw new Exception(\sprintf(
                 "Type must be a class-string or callable, got '%s'",
                 \gettype($type)
             ));
@@ -36,14 +36,14 @@ final class TypedSpecification extends AbstractSpecification
     /**
      * @param mixed $candidate
      * @return void
-     * @throws \InvalidArgumentException
+     * @throws \Basko\Specification\Exception
      */
     private function assertCandidateType($candidate)
     {
         if (\is_callable($this->type)) {
             try {
                 if (!\call_user_func($this->type, $candidate)) {
-                    throw new \InvalidArgumentException(\sprintf(
+                    throw new Exception(\sprintf(
                         "%s<%s>::isSatisfiedBy() type check failed (callback returned falsy result), candidate '%s'",
                         \get_class($this),
                         \get_class($this->container),
@@ -53,7 +53,7 @@ final class TypedSpecification extends AbstractSpecification
             } catch (\InvalidArgumentException $argumentException) {
                 throw $argumentException;
             } catch (\Exception $exception) {
-                throw new \InvalidArgumentException(
+                throw new Exception(
                     \sprintf(
                         "%s<%s>::isSatisfiedBy() type check failed (%s), candidate '%s'",
                         \get_class($this),
@@ -66,7 +66,7 @@ final class TypedSpecification extends AbstractSpecification
                 );
             }
         } elseif (!$candidate instanceof $this->type) {
-            throw new \InvalidArgumentException(\sprintf(
+            throw new Exception(\sprintf(
                 "%s::isSatisfiedBy() expected '%s', got '%s'",
                 \get_class($this->container),
                 $this->type,
@@ -78,13 +78,13 @@ final class TypedSpecification extends AbstractSpecification
     /**
      * @param mixed $candidate
      * @return bool
-     * @throws \InvalidArgumentException
+     * @throws \Basko\Specification\Exception
      */
     public function isSatisfiedBy($candidate)
     {
         $this->assertCandidateType($candidate);
         $result = $this->container->isSatisfiedBy($candidate);
-        $this->assertReturnType($result, $this->container);
+        Exception::assertReturnType($result, $this->container);
 
         return $result;
     }
@@ -92,7 +92,7 @@ final class TypedSpecification extends AbstractSpecification
     /**
      * @param $candidate
      * @return Specification|null
-     * @throws \InvalidArgumentException
+     * @throws \Basko\Specification\Exception
      */
     public function remainderUnsatisfiedBy($candidate)
     {

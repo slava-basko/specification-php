@@ -2,26 +2,18 @@
 
 namespace Basko\Specification;
 
-final class ImpliesSpecification extends AbstractSpecification
+/**
+ * Material implication
+ */
+final class ImplySpecification extends AbstractSpecification implements Binary
 {
-    /**
-     * @var \Basko\Specification\Specification
-     */
-    private $a;
-
-    /**
-     * @var \Basko\Specification\Specification
-     */
-    private $b;
-
     /**
      * @param \Basko\Specification\Specification $a
      * @param \Basko\Specification\Specification $b
      */
     public function __construct(Specification $a, Specification $b)
     {
-        $this->a = $a;
-        $this->b = $b;
+        $this->container = [$a, $b];
     }
 
     /**
@@ -30,6 +22,6 @@ final class ImpliesSpecification extends AbstractSpecification
      */
     public function isSatisfiedBy($candidate)
     {
-        return !$this->a->isSatisfiedBy($candidate) || $this->b->isSatisfiedBy($candidate);
+        return !$this->container[0]->isSatisfiedBy($candidate) || $this->container[1]->isSatisfiedBy($candidate);
     }
 }

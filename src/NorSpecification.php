@@ -2,6 +2,9 @@
 
 namespace Basko\Specification;
 
+/**
+ * Negation of the inclusive disjunction
+ */
 final class NorSpecification extends GroupSpecification
 {
     /**
@@ -10,6 +13,6 @@ final class NorSpecification extends GroupSpecification
      */
     public function isSatisfiedBy($candidate)
     {
-        return !((new OrSpecification($this->container))->isSatisfiedBy($candidate));
+        return (new NotSpecification(new OrSpecification($this->container)))->isSatisfiedBy($candidate);
     }
 }

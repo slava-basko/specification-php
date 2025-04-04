@@ -2,7 +2,7 @@
 
 namespace Basko\Specification;
 
-class TrueSpecification extends AbstractSpecification
+final class TrueSpecification extends AbstractSpecification
 {
     /**
      * @param mixed $candidate

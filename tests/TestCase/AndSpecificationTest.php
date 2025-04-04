@@ -4,8 +4,8 @@ namespace Basko\SpecificationTest\TestCase;
 
 
 use Basko\Specification\AndSpecification;
+use Basko\Specification\Exception;
 use Basko\Specification\NotSpecification;
-use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
 use Basko\SpecificationTest\Specification\KingSpecification;
 use Basko\SpecificationTest\Specification\SpadesSpecification;
 use Basko\SpecificationTest\Value\PlayingCard;
@@ -15,7 +15,7 @@ class AndSpecificationTest extends BaseTest
     public function testAndSpecificationInvalidArguments()
     {
         $this->setExpectedException(
-            \InvalidArgumentException::class,
+            Exception::class,
             "Expected 'Basko\Specification\Specification', got 'integer'"
         );
 

@@ -2,7 +2,7 @@
 
 namespace Basko\Specification;
 
-abstract class GroupSpecification extends AbstractSpecification
+abstract class GroupSpecification extends AbstractSpecification implements Nary
 {
     /**
      * Constructor for GroupSpecification.
@@ -13,7 +13,7 @@ abstract class GroupSpecification extends AbstractSpecification
      * ```
      *
      * @param mixed $specifications Either an array of Specifications or individual Specification objects.
-     * @throws \InvalidArgumentException If any item in the specifications array is not an instance
+     * @throws \Basko\Specification\Exception If any item in the specifications array is not an instance
      *                                    of the Specification class.
      */
     public function __construct($specifications)
@@ -21,13 +21,7 @@ abstract class GroupSpecification extends AbstractSpecification
         $specifications = Utils::flatten(\func_get_args());
 
         foreach ($specifications as $specification) {
-            if (!$specification instanceof Specification) {
-                throw new \InvalidArgumentException(\sprintf(
-                    "Expected '%s', got '%s'",
-                    Specification::class,
-                    \is_object($specification) ? \get_class($specification) : \gettype($specification)
-                ));
-            }
+            Exception::assertSpecification($specification);
         }
 
         $this->container = $specifications;
@@ -36,6 +30,7 @@ abstract class GroupSpecification extends AbstractSpecification
     /**
      * @param mixed $candidate
      * @return \Basko\Specification\GroupSpecification|null
+     * @throws \Basko\Specification\Exception
      */
     public function remainderUnsatisfiedBy($candidate)
     {

@@ -105,8 +105,8 @@ and doc-block `@param User $candidate` helps your IDE to autocomplete `$candidat
 
 #### Composition
 
-This lib provides couple of useful builtin specifications like `NotSpecification`, `AndSpecification`,
-and `OrSpecification` that helps you to group up your specifications and create a new one.
+This lib provides useful builtin specifications like `NotSpecification`, `AndSpecification`, `OrSpecification`, 
+etc. (https://en.wikipedia.org/wiki/Logical_connective) that helps you to group up your specifications and create a new one.
 
 ```php
 $adultPersonSpecification = new AndSpecification([
@@ -128,17 +128,17 @@ Here is another example that shows how highly composable specifications could be
 $spec = new OrSpecification([
     new AndSpecification([
         new SpadesSpecification(),
-        new NotSpecification(new OrSpecification([
+        new NorSpecification([
             new PlayingCardSpecification(PlayingCard::SUIT_SPADES, PlayingCard::RANK_2),
             new PlayingCardSpecification(PlayingCard::SUIT_SPADES, PlayingCard::RANK_3)
-        ]))
+        ])
     ]),
     new AndSpecification([
         new HeartsSpecification(),
-        new NotSpecification(new OrSpecification([
+        new NorSpecification([
             new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_2),
             new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_3)
-        ]))
+        ])
     ]),
 ]);
 
@@ -148,8 +148,8 @@ $spec->isSatisfiedBy(new PlayingCard(PlayingCard::SUIT_SPADES, PlayingCard::RANK
 
 #### Remainders
 
-Method `isSatisfiedBy` returns `bool`, and sometimes in case of `false` you want to know what exactly gone wrong.
-Use `remainderUnsatisfiedBy` method for that. It that returns a remainder of unsatisfied specifications.
+Method `isSatisfiedBy` returns `bool`, and sometimes in case of `false` you want to know what exactly has gone wrong.
+Use `remainderUnsatisfiedBy` method for that. It returns a remainder of unsatisfied specifications.
 
 ```php
 $parcel = [

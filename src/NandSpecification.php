@@ -3,7 +3,7 @@
 namespace Basko\Specification;
 
 /**
- * A.k.a. Sheffer stroke (https://en.wikipedia.org/wiki/Sheffer_stroke)
+ * Negation of the conjunction , a.k.a. Sheffer stroke
  */
 final class NandSpecification extends GroupSpecification
 {
@@ -13,6 +13,6 @@ final class NandSpecification extends GroupSpecification
      */
     public function isSatisfiedBy($candidate)
     {
-        return !((new AndSpecification($this->container))->isSatisfiedBy($candidate));
+        return (new NotSpecification(new AndSpecification($this->container)))->isSatisfiedBy($candidate);
     }
 }

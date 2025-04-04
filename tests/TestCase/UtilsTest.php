@@ -3,6 +3,8 @@
 namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\AndSpecification;
+use Basko\Specification\FalseSpecification as FSpec;
+use Basko\Specification\ImplySpecification;
 use Basko\Specification\OrSpecification;
 use Basko\Specification\TypedSpecification;
 use Basko\Specification\Utils;
@@ -65,6 +67,16 @@ class UtilsTest extends BaseTest
                 ],
             ],
             Utils::toSnakeCase($orSpec)
+        );
+    }
+
+    public function testBinary()
+    {
+        $this->assertEquals(
+            [
+                'imply' => ['false', 'false'],
+            ],
+            Utils::toSnakeCase(new ImplySpecification(new FSpec(), new FSpec()))
         );
     }
 }

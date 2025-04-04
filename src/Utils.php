@@ -13,11 +13,12 @@ final class Utils extends AbstractSpecification
     }
 
     /**
-     * @throws \Exception
+     * @return mixed
+     * @throws \Basko\Specification\Exception
      */
     public function __wakeup()
     {
-        throw new \Exception("Cannot unserialize");
+        throw new Exception("Cannot unserialize");
     }
 
     public function isSatisfiedBy($candidate)
@@ -51,8 +52,8 @@ final class Utils extends AbstractSpecification
      */
     public static function toSnakeCase(Specification $specification)
     {
-        if ($specification instanceof GroupSpecification) {
-            $key = $specification instanceof AndSpecification ? 'and' : 'or';
+        if ($specification instanceof Nary) {
+            $key = Utils::getName($specification);
 
             $result = [$key => []];
             foreach ($specification->container as $spec) {
@@ -60,12 +61,26 @@ final class Utils extends AbstractSpecification
             }
 
             return $result;
-        } elseif ($specification instanceof NotSpecification) {
-            return ['not' => Utils::toSnakeCase($specification->container)];
+        } elseif ($specification instanceof Binary) {
+            return [Utils::getName($specification) => [
+                Utils::toSnakeCase($specification->container[0]),
+                Utils::toSnakeCase($specification->container[1])
+            ]];
+        } elseif ($specification instanceof Unary) {
+            return [Utils::getName($specification) => Utils::toSnakeCase($specification->container)];
         } elseif ($specification instanceof TypedSpecification) {
             return Utils::toSnakeCase($specification->container);
         }
 
+        return Utils::getName($specification);
+    }
+
+    /**
+     * @param \Basko\Specification\Specification $specification
+     * @return string
+     */
+    private static function getName(Specification $specification)
+    {
         if (\method_exists($specification, '__toString')) {
             return (string)$specification;
         }

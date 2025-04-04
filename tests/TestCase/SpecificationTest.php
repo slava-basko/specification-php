@@ -4,11 +4,12 @@ namespace Basko\SpecificationTest\TestCase;
 
 
 use Basko\Specification\AndSpecification;
-use Basko\Specification\ConverseImpliesSpecification;
+use Basko\Specification\ConverseImplySpecification;
 use Basko\Specification\ConverseNimplySpecification;
 use Basko\Specification\FalseSpecification as FSpec;
 use Basko\Specification\IdentitySpecification;
-use Basko\Specification\ImpliesSpecification;
+use Basko\Specification\ImplySpecification;
+use Basko\Specification\MethodSpecification;
 use Basko\Specification\NandSpecification;
 use Basko\Specification\NimplySpecification;
 use Basko\Specification\NorSpecification;
@@ -18,6 +19,7 @@ use Basko\Specification\TrueSpecification as TSpec;
 use Basko\Specification\XnorSpecification;
 use Basko\Specification\XorSpecification;
 use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
+use Basko\SpecificationTest\Value\Order;
 use Basko\SpecificationTest\Value\PlayingCard;
 
 class SpecificationTest extends BaseTest
@@ -159,10 +161,10 @@ class SpecificationTest extends BaseTest
          * T   F   F
          * T   T   T
          */
-        $this->assertTrue((new ImpliesSpecification(new FSpec(), new FSpec()))->isSatisfiedBy(null));
-        $this->assertTrue((new ImpliesSpecification(new FSpec(), new TSpec()))->isSatisfiedBy(null));
-        $this->assertFalse((new ImpliesSpecification(new TSpec(), new FSpec()))->isSatisfiedBy(null));
-        $this->assertTrue((new ImpliesSpecification(new TSpec(), new TSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ImplySpecification(new FSpec(), new FSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ImplySpecification(new FSpec(), new TSpec()))->isSatisfiedBy(null));
+        $this->assertFalse((new ImplySpecification(new TSpec(), new FSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ImplySpecification(new TSpec(), new TSpec()))->isSatisfiedBy(null));
 
         /**
          * Truth table for A ⇏ B (A ∧ ¬B)
@@ -187,10 +189,10 @@ class SpecificationTest extends BaseTest
          * T   F   T
          * T   T   T
          */
-        $this->assertTrue((new ConverseImpliesSpecification(new FSpec(), new FSpec()))->isSatisfiedBy(null));
-        $this->assertFalse((new ConverseImpliesSpecification(new FSpec(), new TSpec()))->isSatisfiedBy(null));
-        $this->assertTrue((new ConverseImpliesSpecification(new TSpec(), new FSpec()))->isSatisfiedBy(null));
-        $this->assertTrue((new ConverseImpliesSpecification(new TSpec(), new TSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ConverseImplySpecification(new FSpec(), new FSpec()))->isSatisfiedBy(null));
+        $this->assertFalse((new ConverseImplySpecification(new FSpec(), new TSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ConverseImplySpecification(new TSpec(), new FSpec()))->isSatisfiedBy(null));
+        $this->assertTrue((new ConverseImplySpecification(new TSpec(), new TSpec()))->isSatisfiedBy(null));
 
         /**
          * Truth table for A ⇍ B (¬A ∧ B)
@@ -205,6 +207,44 @@ class SpecificationTest extends BaseTest
         $this->assertTrue((new ConverseNimplySpecification(new FSpec(), new TSpec()))->isSatisfiedBy(null));
         $this->assertFalse((new ConverseNimplySpecification(new TSpec(), new FSpec()))->isSatisfiedBy(null));
         $this->assertFalse((new ConverseNimplySpecification(new TSpec(), new TSpec()))->isSatisfiedBy(null));
+    }
+
+    public function testImplySpecification()
+    {
+        $shippedSpec = new MethodSpecification('isShipped');
+        $paidSpec = new MethodSpecification('isPaid');
+
+        $validShippingSpec = new ImplySpecification($shippedSpec, $paidSpec);
+
+        /**
+         * Business logic requires that an order cannot be shipped unless it has been paid for.
+         * This can be expressed using implication:
+         * If an order is shipped, then it must be paid (shipped -> paid).
+         */
+
+        // If the order is not shipped (isShipped() == false), then the condition shipped -> paid is always true, so everything is fine.
+        $this->assertTrue($validShippingSpec->isSatisfiedBy(new Order(false, false)));
+
+        // If the order is shipped (isShipped() == true) but not paid (isPaid() == false), then shipped -> paid becomes false — which means the specification is not satisfied
+        $this->assertFalse($validShippingSpec->isSatisfiedBy(new Order(true, false)));
+
+        // If the order is shipped and paid, everything is valid.
+        $this->assertTrue($validShippingSpec->isSatisfiedBy(new Order(true, true)));
+
+        // VS
+
+        // OR + NOT
+        $validShippingSpec2 = new OrSpecification(new NotSpecification($shippedSpec), $paidSpec);
+        $this->assertTrue($validShippingSpec2->isSatisfiedBy(new Order(false, false)));
+        $this->assertFalse($validShippingSpec2->isSatisfiedBy(new Order(true, false)));
+        $this->assertTrue($validShippingSpec2->isSatisfiedBy(new Order(true, true)));
+        /**
+         * This works, but it's less readable, especially for business logic:
+         * "Order is not shipped or it is paid" is not as obvious as "If shipped, then paid".
+         *
+         * But ImpliesSpecification($shippedSpec, $paidSpec) reads almost like an English sentence:
+         * "If shipped, then paid".
+         */
     }
 
     public function testSpecification()

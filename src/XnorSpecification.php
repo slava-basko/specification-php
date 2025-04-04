@@ -2,6 +2,9 @@
 
 namespace Basko\Specification;
 
+/**
+ * Negation og the exclusive disjunction
+ */
 final class XnorSpecification extends GroupSpecification
 {
     /**
@@ -10,6 +13,6 @@ final class XnorSpecification extends GroupSpecification
      */
     public function isSatisfiedBy($candidate)
     {
-        return !((new XorSpecification($this->container))->isSatisfiedBy($candidate));
+        return (new NotSpecification(new XorSpecification($this->container)))->isSatisfiedBy($candidate);
     }
 }

@@ -10,29 +10,14 @@ abstract class AbstractSpecification implements Specification
     protected $container = null;
 
     /**
-     * @param mixed $result
-     * @param \Basko\Specification\Specification|null $specification
-     * @return void
-     */
-    protected function assertReturnType($result, Specification $specification = null)
-    {
-        if (!\is_bool($result)) {
-            throw new \LogicException(\sprintf(
-                "%s::isSatisfiedBy() should return 'bool', got '%s'",
-                ($specification instanceof Specification) ? \get_class($specification) : \get_class($this),
-                \is_object($result) ? \get_class($result) : \gettype($result)
-            ));
-        }
-    }
-
-    /**
      * @param mixed $candidate
      * @return bool
+     * @throws \Basko\Specification\Exception
      */
     public function __invoke($candidate)
     {
         $result = $this->isSatisfiedBy($candidate);
-        $this->assertReturnType($result);
+        Exception::assertReturnType($result, $this);
 
         return $result;
     }

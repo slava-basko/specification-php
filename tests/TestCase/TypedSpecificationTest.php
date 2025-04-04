@@ -2,6 +2,7 @@
 
 namespace Basko\SpecificationTest\TestCase;
 
+use Basko\Specification\Exception;
 use Basko\Specification\TypedSpecification;
 use Basko\SpecificationTest\Specification\DiamondsAceArraySpecification;
 use Basko\SpecificationTest\Specification\DiamondsAceSpecification;
@@ -13,7 +14,7 @@ class TypedSpecificationTest extends BaseTest
     public function testTypedSpecificationConstructException()
     {
         $this->setExpectedException(
-            \InvalidArgumentException::class,
+            Exception::class,
             "Type must be a class-string or callable, got 'integer'"
         );
 
@@ -23,7 +24,7 @@ class TypedSpecificationTest extends BaseTest
     public function testTypedSpecificationConstructExceptionTypeNotExist()
     {
         $this->setExpectedException(
-            \InvalidArgumentException::class,
+            Exception::class,
             "Type 'SomeClass' not exist"
         );
 
@@ -33,7 +34,7 @@ class TypedSpecificationTest extends BaseTest
     public function testTypedSpecificationException()
     {
         $this->setExpectedException(
-            \InvalidArgumentException::class,
+            Exception::class,
             "DiamondsAceSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
         );
 
@@ -57,7 +58,7 @@ class TypedSpecificationTest extends BaseTest
     public function testTypedSpecificationReturnType()
     {
         $this->setExpectedException(
-            \LogicException::class,
+            Exception::class,
             "InvalidSpecification::isSatisfiedBy() should return 'bool', got 'integer'"
         );
 
@@ -80,7 +81,7 @@ class TypedSpecificationTest extends BaseTest
         );
 
         $this->setExpectedException(
-            \LogicException::class,
+            Exception::class,
             "TypedSpecification<Basko\SpecificationTest\Specification\DiamondsAceArraySpecification>::isSatisfiedBy() type check failed (callback returned falsy result)"
         );
         $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS]);
@@ -93,7 +94,7 @@ class TypedSpecificationTest extends BaseTest
         });
 
         $this->setExpectedException(
-            \LogicException::class,
+            Exception::class,
             "TypedSpecification<Basko\SpecificationTest\Specification\DiamondsAceArraySpecification>::isSatisfiedBy() type check failed (error inside)"
         );
         $spec->isSatisfiedBy(['suit' => PlayingCard::SUIT_DIAMONDS]);

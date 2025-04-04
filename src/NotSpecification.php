@@ -2,8 +2,14 @@
 
 namespace Basko\Specification;
 
-final class NotSpecification extends AbstractSpecification
+/**
+ * Negation
+ */
+final class NotSpecification extends AbstractSpecification implements Unary
 {
+    /**
+     * @param \Basko\Specification\Specification $specification
+     */
     public function __construct(Specification $specification)
     {
         $this->container = $specification;

@@ -2,7 +2,7 @@
 
 namespace Basko\Specification;
 
-class IdentitySpecification extends AbstractSpecification
+final class IdentitySpecification extends AbstractSpecification
 {
     /**
      * @param mixed $candidate

@@ -3,13 +3,15 @@
 namespace Basko\SpecificationTest\TestCase;
 
 use Basko\Specification\AndSpecification;
+use Basko\Specification\Exception;
+use Basko\Specification\NorSpecification;
 use Basko\Specification\NotSpecification;
 use Basko\Specification\OrSpecification;
 use Basko\Specification\TypedSpecification;
 use Basko\Specification\Utils;
 use Basko\SpecificationTest\Specification\HeartsSpecification;
-use Basko\SpecificationTest\Specification\SpadesSpecification;
 use Basko\SpecificationTest\Specification\PlayingCardSpecification;
+use Basko\SpecificationTest\Specification\SpadesSpecification;
 use Basko\SpecificationTest\Value\PlayingCard;
 
 class ComposabilityTest extends BaseTest
@@ -36,10 +38,10 @@ class ComposabilityTest extends BaseTest
             ]),
             new AndSpecification([
                 new HeartsSpecification(),
-                new NotSpecification(new OrSpecification([
+                new NorSpecification([
                     new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_2),
                     new PlayingCardSpecification(PlayingCard::SUIT_HEARTS, PlayingCard::RANK_3),
-                ])),
+                ]),
             ]),
         ]);
     }
@@ -76,8 +78,8 @@ class ComposabilityTest extends BaseTest
         );
 
         $this->setExpectedException(
-            \InvalidArgumentException::class,
-            "Basko\Specification\OrSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
+            Exception::class,
+            "OrSpecification::isSatisfiedBy() expected 'Basko\SpecificationTest\Value\PlayingCard', got 'integer'"
         );
         $spec->isSatisfiedBy(1);
     }
@@ -95,7 +97,7 @@ class ComposabilityTest extends BaseTest
                 [
                     'and' => [
                         'hearts',
-                        ['not' => ['or' => ['♥_2', '♥_3']]],
+                        ['nor' => ['♥_2', '♥_3']],
                     ],
                 ],
             ],
