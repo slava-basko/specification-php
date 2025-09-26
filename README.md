@@ -5,8 +5,7 @@ In simpler words: encapsulate your business's IF's and ELSE's, and speak with cl
 
 Read it if you are not familiar with Specification pattern [http://www.martinfowler.com/apsupp/spec.pdf].
 
-This library has no dependencies on any external libs and works on PHP 5.5+. Why?
-Because legacy projects still exists, and they also want some structure.
+This library has no dependencies on any external libs and works on PHP 5.5+.
 
 ## Install
 
